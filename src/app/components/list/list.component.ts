@@ -25,9 +25,16 @@ export class ListComponent implements OnInit {
   identify = index => index;
 
   deleteTask = id => {
-      this.server.deleteTask(id).subscribe(data => {
+      this.server.deleteTask(id).subscribe(res => {
           // this.server.getTasks();
           this.tasks = this.tasks.filter(task => task.id !== id);
       })
-  }
+  };
+
+  toggleTask = data => {
+      this.server.toggleTask(data).subscribe(taskUpdated => {
+          this.tasks = this.tasks.filter(task => task.id !== data.id);
+          this.tasks.push(taskUpdated);
+      })
+    }
 }

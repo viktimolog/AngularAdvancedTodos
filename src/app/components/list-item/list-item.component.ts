@@ -7,9 +7,11 @@ import { JsonplaceholderService } from "../../services/jsonplaceholder.service";
   templateUrl: './list-item.component.html',
   styleUrls: ['./list-item.component.css']
 })
+
 export class ListItemComponent implements OnInit {
   @Input() task: Task;
   @Output() delete = new EventEmitter();
+  @Output() toggle = new EventEmitter();
 
   constructor(public server: JsonplaceholderService) { }
 
@@ -20,5 +22,11 @@ export class ListItemComponent implements OnInit {
   deleteTask(){
       //Generate event
       this.delete.emit(this.task.id);
+  }
+
+  //Toggle Task
+  toggleTask(){
+      //Generate event
+      this.toggle.emit(this.task);
   }
 }

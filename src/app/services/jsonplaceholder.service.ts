@@ -16,4 +16,11 @@ export class JsonplaceholderService {
   deleteTask(id: number){
       return this.http.delete(this.configUrl + id.toString());
   }
+
+  toggleTask(data: object){
+      return this.http.patch(this.configUrl + data.id.toString()
+          , {
+          completed: !data.completed
+      });
+  }
 }
