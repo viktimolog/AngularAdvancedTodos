@@ -23,4 +23,11 @@ export class ListComponent implements OnInit {
           })
   }
   identify = index => index;
+
+  deleteTask = id => {
+      this.server.deleteTask(id).subscribe(data => {
+          // this.server.getTasks();
+          this.tasks = this.tasks.filter(task => task.id !== id);
+      })
+  }
 }
