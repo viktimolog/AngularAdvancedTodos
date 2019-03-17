@@ -20,8 +20,20 @@ export class ListComponent implements OnInit {
               if(data){
                   this.tasks = data;
               }
-          })
+          },
+          error => console.log(error));
+      //Subscribe on new task event
+      this.server.newTask.subscribe((data: Task)=>{
+          console.log('data = ', data);
+          if(data['body']){
+              this.tasks.unshift({
+                  ...data['body'],
+                  id: data.id
+              });
+          }
+      });
   }
+
   identify = index => index;
 
   deleteTask = id => {

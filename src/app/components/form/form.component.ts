@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { JsonplaceholderService } from "../../services/jsonplaceholder.service";
+import { Task } from "../../models/Task";
 
 @Component({
   selector: 'app-form',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormComponent implements OnInit {
 
-  constructor() { }
+    title: string;
+    @ViewChild('form') form;
+
+  constructor(public server: JsonplaceholderService) { }
 
   ngOnInit() {
   }
 
+  addTask(){
+      const newTask = {
+          userId: 1,
+          completed: false,
+          title: this.title
+      };
+
+      this.server.addTask(newTask).subscribe((task: Task) => {
+            this.form.reset();
+            this.server.emitNewTask(task)
+      })
+  }
 }
