@@ -1,0 +1,9 @@
+<nav class="navbar navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Todo</a>
+    <span class="navbar-text" *ngIf="lastMessage">
+        Last added task: {{lastMessage}}
+    </span>
+    <span class="navbar-text">
+        Todos length: {{todosLength}}
+    </span>
+</nav>

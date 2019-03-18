@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
 import { Task } from '../models/Task';
+import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +13,17 @@ export class JsonplaceholderService {
   private taskSource = new BehaviorSubject<Task>({id: 0, title: '', userId:0, completed: false });
   newTask = this.taskSource.asObservable();
 
+  private taskCountSource = new BehaviorSubject(200);
+  taskCount = this.taskCountSource.asObservable();
+
   constructor(public http: HttpClient) { }
 
   emitNewTask(task: Task){
       this.taskSource.next(task);
+  }
+
+  updateCount(length: number){
+      this.taskCountSource.next(length);
   }
 
   getTasks(){
