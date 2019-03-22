@@ -9,17 +9,33 @@ import { BehaviorSubject } from "rxjs/internal/BehaviorSubject";
 export class JsonplaceholderService {
   configUrl = 'https://jsonplaceholder.typicode.com/todos/';
 
-  //add new task
+  //Add new task
   private taskSource = new BehaviorSubject<Task>({id: 0, title: '', userId:0, completed: false });
   newTask = this.taskSource.asObservable();
 
   private taskCountSource = new BehaviorSubject(200);
   taskCount = this.taskCountSource.asObservable();
 
+  //Edit task
+  private editTaskSource = new BehaviorSubject<Task>({id: 0, title: '', userId:0, completed: false });
+  editingTask = this.editTaskSource.asObservable();
+
+  //Update task
+  private updateTaskSource = new BehaviorSubject<Task>({id: 0, title: '', userId:0, completed: false });
+  updatingTask = this.updateTaskSource.asObservable();
+
   constructor(public http: HttpClient) { }
 
   emitNewTask(task: Task){
       this.taskSource.next(task);
+  }
+
+  emitEditTask(task: Task){
+      this.editTaskSource.next(task);
+  }
+
+  emitUpdateTask(task: Task){
+      this.updateTaskSource.next(task);
   }
 
   updateCount(length: number){
@@ -44,4 +60,11 @@ export class JsonplaceholderService {
           completed: !data.completed
       });
   }
+
+  editTask(task: Task){
+      return this.http.put(this.configUrl + task.id.toString()
+          , {
+              body: task
+      });
+    }
 }

@@ -11,6 +11,8 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 export class FormComponent implements OnInit {
 
     title: string;
+    currentTaskId: number;
+    isEdit: boolean;
     @ViewChild('form') form;
 
   constructor(
@@ -19,13 +21,22 @@ export class FormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+      //Subscribe on edit task
+      this.server.editingTask.subscribe((task: Task) => {
+          if(task.title){
+              this.isEdit = true;
+              this.title = task.title;
+              this.currentTaskId = task.id;
+          }
+      });
   }
 
   addTask(){
       const newTask = {
+          id: 0,
           userId: 1,
-          completed: false,
-          title: this.title
+          title: this.title,
+          completed: false
       };
 
       this.server.addTask(newTask).subscribe((task: Task) => {
@@ -47,5 +58,34 @@ export class FormComponent implements OnInit {
               });
           }
       )
+  }
+  editTask(){
+      const updatedTask = {
+          id: this.currentTaskId,
+          userId: 1,
+          completed: false,
+          title: this.title
+      };
+
+      this.server.editTask(updatedTask).subscribe((task: Task) => {
+          this.form.reset();
+          this.server.emitUpdateTask(task);
+          this.flashMessage.show('Edit success!', {
+              cssClass: 'alert-success',
+              showCloseBtn: true,
+              closeOnClick: true,
+              timeout: 3000
+          });
+      },
+          error => {
+              this.flashMessage.show(error.message, {
+                  cssClass: 'alert-danger',
+                  showCloseBtn: true,
+                  closeOnClick: true,
+                  timeout: 5000
+              });
+          }
+      );
+      this.isEdit = false;
   }
 }

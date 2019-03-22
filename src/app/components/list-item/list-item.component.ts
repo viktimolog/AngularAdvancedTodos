@@ -12,6 +12,7 @@ export class ListItemComponent implements OnInit {
   @Input() task: Task;
   @Output() delete = new EventEmitter();
   @Output() toggle = new EventEmitter();
+  @Output() edit = new EventEmitter();
 
   constructor(public server: JsonplaceholderService) { }
 
@@ -28,5 +29,10 @@ export class ListItemComponent implements OnInit {
   toggleTask(){
       //Generate event
       this.toggle.emit(this.task);
+  }
+
+  //Edit Task
+  editTask(){
+      this.edit.emit({...this.task});
   }
 }

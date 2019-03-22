@@ -26,13 +26,24 @@ export class ListComponent implements OnInit {
           error => console.log(error));
       //Subscribe on new task event
       this.server.newTask.subscribe((data: Task) => {
-          console.log('data = ', data);
           if(data['body']){
               this.tasks.unshift({
                   ...data['body'],
                   id: data.id
               });
               this.server.updateCount(this.tasks.length);
+          }
+      });
+
+      //Subscribe on update task event
+      this.server.updatingTask.subscribe((data: Task) => {
+          if(data['body']){
+              this.tasks = this.tasks.map(item => {
+                  if(item.id === data.id){
+                      item.title = data['body'].title;
+                  }
+                  return item;
+              })
           }
       });
   }
@@ -64,8 +75,16 @@ export class ListComponent implements OnInit {
 
   toggleTask = data => {
       this.server.toggleTask(data).subscribe(taskUpdated => {
-          this.tasks = this.tasks.filter(task => task.id !== data.id);
-          this.tasks.push(taskUpdated);
+          this.tasks = this.tasks.map(item => {
+              if(item.id === taskUpdated.id){
+                  item.completed = taskUpdated.completed;
+              }
+              return item;
+          })
       })
+    };
+
+    editTask = (task: Task) => {
+        this.server.emitEditTask(task);
     }
 }
